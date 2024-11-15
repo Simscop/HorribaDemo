@@ -319,29 +319,50 @@ partial class MainWindow
 {
     public static void PinLog(string msg = "", [CallerMemberName] string method = "")
         => Log.Verbose("[Call Method] {method} {msg}", method, msg);
+
+    public static void ExitLog(string msg = "", [CallerMemberName] string method = "")
+        => Log.Verbose("[Exit Method] {method} {msg}", method, msg);
 }
 
 // event
 partial class MainWindow
 {
     private void OnInitializeClicked(object sender, RoutedEventArgs e)
-        => Application.Current.Dispatcher.BeginInvoke(LoadInit);
+        => Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            ExitLog($"ConnectCcd -> {LoadInit()}");
+        });
 
     private void OnCcdConnectionClicked(object sender, RoutedEventArgs e)
-        => Application.Current.Dispatcher.BeginInvoke(ConnectCcd);
+        => Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            ConnectCcd();
+            ExitLog("ConnectCcd");
+
+        });
 
     private void OnCcdInitializedClicked(object sender, RoutedEventArgs e)
-        => Application.Current.Dispatcher.BeginInvoke(InitializeCcd);
+        => Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            InitializeCcd();
+            ExitLog("InitializeCcd");
+        });
 
+
+    private void OnCcdParasSetting(object sender, RoutedEventArgs e)
+    {
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            SetCcdParams();
+            ExitLog("SetCcdParams");
+        });
+    }
 
     private void OnAcquisitionClicked(object sender, RoutedEventArgs e)
     {
         PinLog();
 
-
         _ccd.DoAcquisition(true);
+        ExitLog("PinLog");
     }
-
-    private void OnCcdParasSetting(object sender, RoutedEventArgs e)
-        => Application.Current.Dispatcher.BeginInvoke(SetCcdParams);
 }
