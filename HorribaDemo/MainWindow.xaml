@@ -38,6 +38,13 @@
             Margin="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            Click="OnCcdParasSetting"
+            Content="CCD属性设置" />
+
+        <Button
+            Margin="5"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             Click="OnAcquisitionClicked"
             Content="CCD采集数据" />
     </StackPanel>

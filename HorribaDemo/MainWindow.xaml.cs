@@ -182,6 +182,10 @@ partial class MainWindow
         PinLog("OnCcdOperationStatusChanged");
     }
 
+    private int _ccdGain = 0;
+    private jyCCDDataType _ccdMode = jyCCDDataType.JYMCD_ACQ_FORMAT_IMAGE;
+    private int _ccdAdc = 0;
+
     private void OnCcdInitialized(int status, JYSYSTEMLIBLib.IJYEventInfo eventInfo)
     {
         PinLog("OnCcdInitialized");
@@ -240,6 +244,7 @@ partial class MainWindow
         Log.Information("Adc -> {adc}", adc);
 
         var adcToken = _ccd.GetFirstADC(out var adcName);
+        _ccdAdc = adcToken;
 
         if (adcToken == -1)
             Log.Information("The Current Device Has NOT Adc Mode!");
@@ -275,6 +280,40 @@ partial class MainWindow
     }
 }
 
+// ccd set params
+partial class MainWindow
+{
+    public void SetCcdParams()
+    {
+        Log.Information("Try Set Gain");
+        _ccd.Gain = _ccdGain;
+
+        Log.Information("Try Set ADC");
+        try
+        {
+            _ccd.SelectADC((jyADCType)_ccdAdc);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.Message);
+        }
+
+        Log.Information("Try Set Intergration");
+        _ccd.IntegrationTime = 10;
+
+        Log.Information("Try Set DataType");
+        _ccd.DefineAcquisitionFormat(jyCCDDataType.JYMCD_ACQ_FORMAT_SCAN, 1);
+
+        Log.Information("Try Set Aera");
+        _ccd.DefineArea(1, 1, 1, 1024, 256, 1, 256);
+
+        if (_ccd.ReadyForAcquisition) return;
+
+        Log.Warning("ReadyForAcquisition Failed.");
+        return;
+    }
+}
+
 // log
 partial class MainWindow
 {
@@ -302,4 +341,7 @@ partial class MainWindow
 
         _ccd.DoAcquisition(true);
     }
+
+    private void OnCcdParasSetting(object sender, RoutedEventArgs e)
+        => Application.Current.Dispatcher.BeginInvoke(SetCcdParams);
 }
