@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFrameworks>net462-windows;net6-windows</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<Platforms>x86</Platforms>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputType>WinExe</OutputType>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<COMReference Include="JYCCDLib">
+			<WrapperTool>tlbimp</WrapperTool>
+			<VersionMinor>0</VersionMinor>
+			<VersionMajor>1</VersionMajor>
+			<Guid>609cf98a-3973-4250-afc9-0f5880896bfc</Guid>
+			<Lcid>0</Lcid>
+			<Isolated>false</Isolated>
+			<EmbedInteropTypes>False</EmbedInteropTypes>
+			<Private>True</Private>
+		</COMReference>
+		<COMReference Include="JYCONFIGBROWSERCOMPONENTLib">
+			<WrapperTool>tlbimp</WrapperTool>
+			<VersionMinor>0</VersionMinor>
+			<VersionMajor>1</VersionMajor>
+			<Guid>6996861c-23a5-43b3-b89a-f65ca06e4d13</Guid>
+			<Lcid>0</Lcid>
+			<Isolated>false</Isolated>
+			<EmbedInteropTypes>False</EmbedInteropTypes>
+			<Private>True</Private>
+		</COMReference>
+		<COMReference Include="JYMONOLib">
+			<WrapperTool>tlbimp</WrapperTool>
+			<VersionMinor>0</VersionMinor>
+			<VersionMajor>1</VersionMajor>
+			<Guid>d7e942dc-3716-4bc1-8da2-08d273bdc501</Guid>
+			<Lcid>0</Lcid>
+			<Isolated>false</Isolated>
+			<EmbedInteropTypes>False</EmbedInteropTypes>
+			<Private>True</Private>
+		</COMReference>
+		<COMReference Include="JYSYSTEMLIBLib">
+			<WrapperTool>tlbimp</WrapperTool>
+			<VersionMinor>0</VersionMinor>
+			<VersionMajor>1</VersionMajor>
+			<Guid>638f5a15-35a6-4f7d-b8ed-b48a4cd4c619</Guid>
+			<Lcid>0</Lcid>
+			<Isolated>false</Isolated>
+			<EmbedInteropTypes>False</EmbedInteropTypes>
+			<Private>True</Private>
+		</COMReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="HandyControls" Version="3.5.3" />
+		<PackageReference Include="Serilog" Version="4.1.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+	</ItemGroup>
+
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="call &quot;C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat&quot;&#xD;&#xA;editbin.exe /NXCOMPAT:NO &quot;$(TargetPath)&quot;" />
+	</Target>
+
+</Project>
